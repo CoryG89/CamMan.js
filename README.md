@@ -13,7 +13,7 @@ Setup
 Simply include the script, and you're ready to roll. You'll need to host
 it for this to work, so don't be surprised if you're not running it from
 `localhost`.
-
+	
 ```html
 <html>
 <head>
