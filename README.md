@@ -1,10 +1,11 @@
-WebcamClient
+CamMan.js
 ===========
-A minimal client library for integrating access to webcam/mic through WebRTC.
-Originally based on [**`leemachin/say-cheese`**][say-cheese]. Enhanced to
-support video output to multiple canvases allowing more uses. Allows you to
-pass in a callback for each canvas output, each callback is called once per
-frame, allowing you to manipulate each frame of the video on each canvas.
+A JavaScript library and event-based API for managing and accessing the webcam
+and microphone using WebRTC. CamMan.js has no external dependencies and relies
+only on the browser to work. Originally based on
+[**`leemachin/say-cheese`**][say-cheese]. Enhanced to support multiple
+canvas video output. Manipulation can be applied differently on multiple
+canvases rendering the same source video.
 
 Check out the [**example demo**][demo] to see what you can do very easily.
 
@@ -18,7 +19,7 @@ it for this to work, so don't be surprised if you're not running it from
 <html>
 <head>
   <title>Example</title>
-  <script src='/assets/js/webcam-client.js'></script>
+  <script src='/assets/js/CamMan.js'></script>
 </head>
 <body>
 	<div id='containerID'></div>
@@ -31,30 +32,30 @@ Usage
 
 ```javascript
 
-/** Appends the source video object to the container */
-var webcamClient = new WebcamClient({container: 'container-id'});
+/** Appends the source video element to the container */
+var camMan = new CamMan({container: 'container-id'});
 
 /** Start event called after user allows access and webcam turns on */
-webcamClient.on('start', function() {
+camMan.on('start', function() {
    this.snapshot();
 });
 
 /** Stop event called after user stop method is called. */
-webcamClient.on('stop', function() {
+camMan.on('stop', function() {
 	;
 });
 
 /** Error event called when user denies access, or when browser unsupported */
-webcamClient.on('error', function(error) {
+camMan.on('error', function(error) {
 	console.log(error);
 });
 
 /** Called whenever a snapshot is taken, passing in the canvas data */
-webcamClient.on('snapshot', function(canvas) {
+camMan.on('snapshot', function(canvas) {
 	;
 });
 
-webcamClient.start();
+camMan.start();
 ```
 
 Using Canvas Video Outputs
@@ -62,11 +63,11 @@ Using Canvas Video Outputs
 ```javascript
 
 /** Create w/ default options, no element initially inserted into DOM */
-var webcamClient = new WebcamClient();
+var camMan = new CamMan();
 
-webcamClient.on('start', function() {
+camMan.on('start', function() {
 
-    webcamClient.getCanvas('first-container-id', function (canvas) {
+    camMan.getCanvas('first-container-id', function (canvas) {
 		var context = canvas.getContext('2d');
 		var imgData = context.getImageData(0, 0, canvas.width, canvas.height);
 		
@@ -75,7 +76,7 @@ webcamClient.on('start', function() {
 		context.putImageData(imgData, 0, 0);
     });
 
-    webcamClient.getCanvas('second-container-id', function (canvas) {
+    camMan.getCanvas('second-container-id', function (canvas) {
 		var context = canvas.getContext('2d');
 		var imgData = context.getImageData(0, 0, canvas.width, canvas.height);
 		
@@ -85,7 +86,7 @@ webcamClient.on('start', function() {
     });
 });
 
-webcamClient.start();
+camMan.start();
 ```
 
 Taking snapshots
@@ -95,13 +96,13 @@ You can take a snapshot at any time after initialisation, by calling the
 `snapshot()` method.
 
 ```javascript
-webcamClient.on('start', function () {
+camMan.on('start', function () {
 
-	webcamClient.on('snapshot', function(canvas) {
+	camMan.on('snapshot', function(canvas) {
 	  // do something with the snapshot
 	});
 
-	webcamClient.snapshot();
+	camMan.snapshot();
 });
 ```
 
@@ -113,7 +114,7 @@ Nightly uses `352x258`. Safari and IE do not have support.
 
 ```javascript
 var width = 640, height = 480;
-webcamClient.snapshot(width, height);
+camMan.snapshot(width, height);
 ```
 
 If snapshots are disabled, the `snapshot()` method will not do anything.
@@ -126,7 +127,7 @@ be in place as soon as other browsers implement audio support. The option for
 audio defaults to `false`, to enable it you must explicitly pass in `true`.
 
 ```javascript
-var webcamClient = new WebcamClient({
+var camMan = new CamMan({
     container: 'container-id',
     audio: true 
 });
@@ -180,7 +181,7 @@ IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 
 
-[demo]: http://coryg89.github.io/WebcamClient/example
+[demo]: http://coryg89.github.io/CamMan.js/example
 [say-cheese]: https://github.com/leemachin/say-cheese
 [robinson]: http://www.storminthecastle.com/2013/05/07/how-you-can-build-an-html5-photobooth-app/
 [mdn]: https://developer.mozilla.org/en-US/docs/WebRTC/Taking_webcam_photos
