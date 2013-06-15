@@ -15,62 +15,62 @@ test("options are set correctly", function() {
         useCanvas: false
     };
 
-  var webcamClient = new WebcamClient(options);
+  var camMan = new CamMan(options);
 
-  ok(equals(webcamClient.options, options), "options correctly set");
+  ok(equals(camMan.options, options), "options correctly set");
 
   options.audio = true
-  webcamClient.setOptions(options);
+  camMan.setOptions(options);
 
-  ok(equals(webcamClient.options, options), "options correctly updated");
+  ok(equals(camMan.options, options), "options correctly updated");
 });
 
 asyncTest("triggers 'start' event when access permitted (click Allow)", function() {
-    var webcamClient = new WebcamClient({ container: 'camera-test' });
+    var camMan = new CamMan({ container: 'camera-test' });
 
-  webcamClient.on('start', function() {
+  camMan.on('start', function() {
     ok(true, "start event triggered");
     start();
     this.stop();
   });
 
-  webcamClient.start();
+  camMan.start();
 });
 
 asyncTest("triggers 'snapshot' event when taking a snapshot", function() {
-    var webcamClient = new WebcamClient({ container: 'camera-test' });
+    var camMan = new CamMan({ container: 'camera-test' });
 
-  webcamClient.on('start', function() {
+  camMan.on('start', function() {
     this.snapshot();
   });
 
-  webcamClient.on('snapshot', function(snapshot) {
+  camMan.on('snapshot', function(snapshot) {
     ok(snapshot.tagName === 'CANVAS', "snapshot event triggered");
     start();
     this.stop();
   });
 
-  webcamClient.start();
+  camMan.start();
 });
 
 
 asyncTest("triggers 'stop' event and successfully cleans up when stopping", function() {
-    var webcamClient = new WebcamClient({ container: 'camera-test' });
+    var camMan = new CamMan({ container: 'camera-test' });
 
-  webcamClient.on('stop', function() {
+  camMan.on('stop', function() {
     ok(true, "stop event triggered");
     start();
   });
 
-  webcamClient.on('start', function() {
+  camMan.on('start', function() {
     this.stop();
   });
 
-  webcamClient.start();
+  camMan.start();
 });
 
 asyncTest("triggers 'error' event when not supported", function() {
-    var webcamClient = new WebcamClient({ container: 'camera-test' });
+    var camMan = new CamMan({ container: 'camera-test' });
 
   // store correct property so we can switch it back after following test
   var origGetUserMedia = navigator.getUserMedia;
@@ -78,22 +78,22 @@ asyncTest("triggers 'error' event when not supported", function() {
   // simulate the lack of functionality
   navigator.getUserMedia = false;
 
-  webcamClient.on('error', function(err) {
+  camMan.on('error', function(err) {
     navigator.getUserMedia = origGetUserMedia;
     ok(err === "Browser not supported", "not supported event triggered");
     start();
   });
 
-  webcamClient.start();
+  camMan.start();
 });
 
 asyncTest("triggers 'error' event when access denied (click Deny)", function() {
-    var webcamClient = new WebcamClient({ container: 'camera-test' });
+    var camMan = new CamMan({ container: 'camera-test' });
 
-  webcamClient.on('error', function(err) {
+  camMan.on('error', function(err) {
     ok(true, "access denied event triggered");
     start();
   });
 
-  webcamClient.start();
+  camMan.start();
 });
