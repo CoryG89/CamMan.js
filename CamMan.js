@@ -25,10 +25,10 @@ var CamMan = (function () {
 
     /** Construct a new CamMan object */
     var CamMan = function CamMan(options) {
+        this.events = {};
         this.snapshots = [];
         this.canvasStorage = [];
         this.video = null;
-        this.events = {};
         this.stream = null;
         this.options = {
             audio: false,
@@ -76,7 +76,7 @@ var CamMan = (function () {
             var context = canvasData.context;
             var callback = canvasData.onFrame;
             context.drawImage(this.video, 0, 0, canvas.width, canvas.height);
-            if (callback) callback(canvas);
+            if (callback) (callback.bind(this))(canvas);
         }
         requestAnimationFrame(this.updateCanvas.bind(this));
     };
@@ -199,6 +199,7 @@ var CamMan = (function () {
             window.URL.revokeObjectURL(this.video.src);
         }
 
+        canvasStorage.length = 0;
         return this.trigger('stop');
     };
 
