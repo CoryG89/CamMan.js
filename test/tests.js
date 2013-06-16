@@ -11,8 +11,8 @@ function equals(obj1, obj2) {
 test("options are set correctly", function() {
     var options = {
         container: 'camera-test',
-        audio: false,
-        useCanvas: false
+        snapshots: true,
+        audio: false
     };
 
   var camMan = new CamMan(options);
