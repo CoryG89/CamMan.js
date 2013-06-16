@@ -199,7 +199,7 @@ var CamMan = (function () {
             window.URL.revokeObjectURL(this.video.src);
         }
 
-        canvasStorage.length = 0;
+        this.canvasStorage.length = 0;
         return this.trigger('stop');
     };
 
