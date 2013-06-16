@@ -4,8 +4,8 @@ A JavaScript library for managing and accessing webcam and mic data using the
 open WebRTC spec. CamMan.js has no external dependencies and includes shims for
 cross browser support exposing a simplified interface and event-based API. 
 Originally based on [**`leemachin/say-cheese`**][say-cheese]. CamMan.js has
-been  enhanced to support canvas outputs, each of which may be manipulated
-separately per frame.
+been enhanced to support multiple canvas outputs, each of which may be
+manipulated separately per frame.
 
 Check out the Photobooth [**example app**][demo] to see what you can do very
 easily with CamMan.js. You can also run the [**QUnit tests**][tests] if you so
