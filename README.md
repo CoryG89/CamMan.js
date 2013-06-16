@@ -1,13 +1,15 @@
 CamMan.js
 ===========
-A JavaScript library and event-based API for managing and accessing the webcam
-and microphone using WebRTC. CamMan.js has no external dependencies and relies
-only on the browser to work. Originally based on
-[**`leemachin/say-cheese`**][say-cheese]. Enhanced to support multiple
-canvas video output. Manipulation can be applied differently on multiple
-canvases rendering the same source video.
+A JavaScript library for managing and accessing webcam and mic data using the
+open WebRTC spec. WebRTC. CamMan.js has no external dependencies and includes
+shims for cross browser support exposing a simplified interface and event-based
+API. Originally based on [**`leemachin/say-cheese`**][say-cheese]. Enhanced
+to support multiple canvas video output. Each canvas may then be manipulated
+separately.
 
-Check out the [**example demo**][demo] to see what you can do very easily.
+Check out the Photobooth [**example app**][demo] to see what you can do very
+easily with CamMan.js. You can also run the [**QUnit tests**][tests] if you so
+choose. The minified source code `CamMan.min.js` weighs in at 3.7 KB.
 
 Setup
 -----
@@ -182,6 +184,7 @@ OF SUCH DAMAGE.
 
 
 [demo]: http://coryg89.github.io/CamMan.js/example
+[tests]: http://coryg89.github.io/CamMan.js/test
 [say-cheese]: https://github.com/leemachin/say-cheese
 [robinson]: http://www.storminthecastle.com/2013/05/07/how-you-can-build-an-html5-photobooth-app/
 [mdn]: https://developer.mozilla.org/en-US/docs/WebRTC/Taking_webcam_photos

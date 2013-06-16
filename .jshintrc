@@ -1,4 +1,7 @@
-/** Default JSHint Configuration */
+/** 
+    Default JSHint Configuration (as on JSHint website) 
+    See http://jshint.com/docs/ for more details
+**/
 { 
     "maxerr"        : false,    // {int} Maximum error before stopping
 
@@ -43,7 +46,7 @@
     /** Relaxing Options */
     "asi"           : false,     // true: Tolerate Automatic Semicolon Insertion
 								 //       (no semicolons)
-    "boss"          : false,     // true: Tolerate assignments where comparisons
+    "boss"          : true,      // true: Tolerate assignments where comparisons
 	                             //       would be expected
     "debug"         : false,     // true: Allow debugger statements breakpoints
     "eqnull"        : false,     // true: Tolerate use of `== null`
