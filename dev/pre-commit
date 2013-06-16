@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ `git rev-parse --abbrev-ref HEAD` == "master" ]; then
+
+	# Run UglifyJS to minify the source code
+	##################################################################
+	uglifyjs CamMan.js -nc -o CamMan.min.js
+	git add CamMan.min.js
+fi
