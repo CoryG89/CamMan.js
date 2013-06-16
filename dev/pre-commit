@@ -6,4 +6,5 @@ if [ `git rev-parse --abbrev-ref HEAD` == "master" ]; then
 	##################################################################
 	uglifyjs CamMan.js -v -nc -o CamMan.min.js
 	git add CamMan.min.js
+
 fi
