@@ -1,36 +1,56 @@
 CamMan.js
 ===========
 A JavaScript library for managing and accessing webcam and mic data using the
-open WebRTC spec. WebRTC. CamMan.js has no external dependencies and includes
-shims for cross browser support exposing a simplified interface and event-based
-API. Originally based on [**`leemachin/say-cheese`**][say-cheese]. Enhanced
-to support multiple canvas video output. Each canvas may then be manipulated
-separately.
+open WebRTC spec. CamMan.js has no external dependencies and includes shims for
+cross browser support exposing a simplified interface and event-based API. 
+Originally based on [**`leemachin/say-cheese`**][say-cheese]. CamMan.js has
+been  enhanced to support canvas outputs, each of which may be manipulated
+separately per frame.
 
 Check out the Photobooth [**example app**][demo] to see what you can do very
 easily with CamMan.js. You can also run the [**QUnit tests**][tests] if you so
 choose. The minified source code `CamMan.min.js` weighs in at 3.7 KB.
 
-Setup
------
-Simply include the script, and you're ready to roll. You'll need to host
-it for this to work, so don't be surprised if you're not running it from
-`localhost`.
-	
+### The Basics
+
+The simplest thing to get your webcam video onto a page.
+
 ```html
 <html>
-<head>
-  <title>Example</title>
-  <script src='/assets/js/CamMan.js'></script>
-</head>
-<body>
-	<div id='containerID'></div>
-</body>
+  <head>
+    <title>Hello CamMan</title>
+    <script type="text/javascript" src="CamMan.js"></script>
+  </head>
+  <body>
+    <div id="container"></div>
+    <script type="text/javascript">
+       var camMan = new CamMan({ container: 'container' });
+       camMan.start();
+    </script>
+  </body>
 </html>
 ```
 
-Usage
------
+By default passing in a container id with the constructor options will cause
+the source video element to be injected into the container. If you'd rather
+have a canvas element, you can wait until the webcam has been initialized and
+then get a canvas. CamMan.js exposes an event-based API:
+
+```javascript
+camMan.on('start', function () {
+	camMan.getCanvas('container', function (canvas) {
+        var ctx = canvas.getContext('2d');
+        var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+		 // Manipulate array of pixel data -- imgData.data
+
+        ctx.putImageData(imgData)
+    });
+});
+```
+
+Event-Based API
+----------------------
 
 ```javascript
 
@@ -44,7 +64,7 @@ camMan.on('start', function() {
 
 /** Stop event called after user stop method is called. */
 camMan.on('stop', function() {
-	;
+	// Do something when stopped
 });
 
 /** Error event called when user denies access, or when browser unsupported */
@@ -54,7 +74,7 @@ camMan.on('error', function(error) {
 
 /** Called whenever a snapshot is taken, passing in the canvas data */
 camMan.on('snapshot', function(canvas) {
-	;
+	// Do something whenever a snapshot is taken
 });
 
 camMan.start();
@@ -155,7 +175,8 @@ Currently supported in
 Resources
 -----------
  - [**MDN - WebRTC -- Taking Webcam Photos**][mdn]
- - [**John Robinson -- How You Can Build an HTML Photobooth App**][robinson]
+ - [**John Robinson** -- *How You Can Build an HTML Photobooth App*][robinson]
+ - [**Cory Gross** -- *Easily Access Webcam with CamMan.js*][gross]
 
 License
 -------
@@ -182,9 +203,9 @@ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
 IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY
 OF SUCH DAMAGE.
 
-
 [demo]: http://coryg89.github.io/CamMan.js/example
 [tests]: http://coryg89.github.io/CamMan.js/test
+[gross]: http://coryg89.github.io/technical/2013/06/15/easily-access-webcam-with-cammanjs/
 [say-cheese]: https://github.com/leemachin/say-cheese
 [robinson]: http://www.storminthecastle.com/2013/05/07/how-you-can-build-an-html5-photobooth-app/
 [mdn]: https://developer.mozilla.org/en-US/docs/WebRTC/Taking_webcam_photos
