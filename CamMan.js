@@ -198,7 +198,6 @@ var CamMan = (function () {
         if (window.URL && window.URL.revokeObjectURL) {
             window.URL.revokeObjectURL(this.video.src);
         }
-        f
         this.canvasStorage.length = 0;
         return this.trigger('stop');
     };
