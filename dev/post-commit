@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ `git rev-parse --abbrev-ref HEAD` == "master" ]; then
+
+    # Run JSHint
+	#########################################
+	if `jshint CamMan.js`; then
+	    echo "JSHint ran successfully, no warnings or errors found"
+
+		# Sync gh-pages branch with master
+		#########################################
+		git checkout gh-pages
+		git rm -rf -q .
+		git checkout master -- .
+		git add .
+		git commit -am "Syncing gh-pages with master"
+		git checkout master
+	fi
+
+fi

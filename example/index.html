@@ -1,0 +1,164 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Webcam Booth</title>
+    <script type="text/javascript" src="../CamMan.js"></script>
+  </head>
+  <body style="text-align:center;">
+
+    <h2>Webcam Booth</h2>
+    
+    <div id="videocanvas-container"><h4>HTML5 Video / Canvas Elements</h4></div>
+    <div id="color-container"><h4>Color Filters</h4></div>
+    <div id="grayscale-container"><h4>Grayscale Filter</h4></div>
+    <div id="sepia-container"><h4>Sepia Filter</h4></div>
+    <div id="inverse-container"><h4>Inverse Filter</h4></div>
+
+    <script type="text/javascript">
+      var camMan = new CamMan({ container: 'videocanvas-container' });
+
+      camMan.on('start', function () {
+
+        camMan.getCanvas({ container: 'videocanvas-container' });
+
+        camMan.getCanvas({
+          container: 'color-container', 
+          onFrame: filter(yellowScale)
+        });
+
+        camMan.getCanvas({
+          container: 'color-container',
+          onFrame: filter(redScale)
+        });
+
+        camMan.getCanvas({
+          container: 'color-container',
+          onFrame: filter(greenScale)
+        });
+
+        camMan.getCanvas({
+          container: 'color-container',
+          onFrame: filter(blueScale)
+        });
+
+        camMan.getCanvas({ container: 'grayscale-container' });
+
+        camMan.getCanvas({
+          container: 'grayscale-container',
+          onFrame: filter(grayScale)
+        });
+        
+        camMan.getCanvas({ container: 'sepia-container' });
+        camMan.getCanvas({
+          container: 'sepia-container',
+          onFrame: filter(sepia)
+        });
+
+        camMan.getCanvas({ container: 'inverse-container' });
+        camMan.getCanvas({
+          container: 'inverse-container',
+          onFrame: filter(inverse)
+        });
+
+      });
+
+      camMan.start();
+
+      var filter = function filter(filterFunction) {
+        return function (canvas) {
+          var context = canvas.getContext('2d');
+          var imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+          imgData = filterFunction(imgData);
+          context.putImageData(imgData, 0, 0);
+        };
+      };
+
+      var redScale = function redScale(imageData) {
+        var data = imageData.data;
+        for (var i = 0; i < data.length; i += 4) {
+          var red = data[i];
+          var green = data[i + 1];
+          var blue = data[i + 2];
+          var average = (red + green + blue) / 3;
+          data[i] = average;
+          data[i + 1] = data[i + 2] = 0;
+        }
+        return imageData;
+      };
+
+      var greenScale = function greenScale(imageData) {
+        var data = imageData.data;
+        for (var i = 0; i < data.length; i += 4) {
+          var red = data[i];
+          var green = data[i + 1];
+          var blue = data[i + 2];
+          var average = (red + green + blue) / 3;
+          data[i + 1] = average;
+          data[i] = data[i + 2] = 0;
+        }
+        return imageData;
+      };
+
+      var blueScale = function blueScale(imageData) {
+        var data = imageData.data;
+        for (var i = 0; i < data.length; i += 4) {
+          var red = data[i];
+          var green = data[i + 1];
+          var blue = data[i + 2];
+          var average = (red + green + blue) / 3;
+          data[i + 2] = average;
+          data[i] = data[i + 1] = 0;
+        }
+        return imageData;
+      };
+
+      var yellowScale = function yellowScale(imageData) {
+          var data = imageData.data;
+          for (var i = 0; i < data.length; i += 4) {
+            var red = data[i];
+            var green = data[i + 1];
+            var blue = data[i + 2];
+            var average = (red + green + blue) / 3;
+            data[i] = data[i + 1] = average;
+            data[i + 2] = 0;
+          }
+          return imageData;
+      };
+
+      var grayScale = function grayScale(imageData) {
+        var data = imageData.data;
+        for (var i = 0; i < data.length; i += 4) {
+          var red = data[i];
+          var green = data[i + 1];
+          var blue = data[i + 2];
+          var average = (red + green + blue) / 3;
+          data[i] = data[i + 1] = data[i + 2] = average;
+        }
+        return imageData;
+      };
+      
+        var sepia = function sepia(imageData) {
+          var data = imageData.data;
+          for (var i = 0; i < data.length; i += 4) {
+            var red = data[i];
+            var green = data[i + 1];
+            var blue = data[i + 2];
+            data[i] = (red * 0.393) + (green * 0.769) + (blue * 0.189);
+            data[i + 1] = (red * 0.349) + (green * 0.686) + (blue * 0.168);
+            data[i + 2] = (red * 0.272) + (green * 0.534) + (blue * 0.131);
+          }
+          return imageData;
+        };
+
+        var inverse = function inverse(imageData) {
+          var data = imageData.data;
+          for (var i = 0; i < data.length; i += 4) {
+            data[i] = 255 - data[i];
+            data[i + 1] = 255 - data[i + 1];
+            data[i + 2] = 255 - data[i + 2];
+          }
+          return imageData;
+        };
+    </script>
+  </body>
+</html>
