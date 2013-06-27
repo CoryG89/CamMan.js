@@ -95,7 +95,7 @@ asyncTest("Async Test -- Successfully get a canvas", function () {
     var camMan = new CamMan();
 
     camMan.on('start', function () {
-        var canvas = camMan.getCanvas('container');
+        var canvas = camMan.getCanvas({ container: 'container' });
         if (canvas) ok(true, "The 'start' event was triggered");
         this.stop();
     });
