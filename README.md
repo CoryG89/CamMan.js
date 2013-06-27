@@ -22,9 +22,9 @@ The simplest thing to get your webcam video onto a page.
     <script type="text/javascript" src="CamMan.js"></script>
   </head>
   <body>
-    <div id="container"></div>
+    <div id="container-id"></div>
     <script type="text/javascript">
-       var camMan = new CamMan({ container: 'container' });
+       var camMan = new CamMan({ container: 'container-id' });
        camMan.start();
     </script>
   </body>
@@ -38,13 +38,16 @@ then get a canvas. CamMan.js exposes an event-based API:
 
 ```javascript
 camMan.on('start', function () {
-	camMan.getCanvas('container', function (canvas) {
-        var ctx = canvas.getContext('2d');
-        var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+	camMan.getCanvas({
+        container: 'container-id', 
+        onFrame: function (canvas) {
+            var ctx = canvas.getContext('2d');
+            var imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
 
-		 // Manipulate array of pixel data -- imgData.data
+		     // Manipulate array of pixel data -- imgData.data
 
-        ctx.putImageData(imgData)
+            ctx.putImageData(imgData)
+        }
     });
 });
 ```
@@ -53,7 +56,6 @@ Event-Based API
 ----------------------
 
 ```javascript
-
 /** Appends the source video element to the container */
 var camMan = new CamMan({container: 'container-id'});
 
@@ -89,22 +91,28 @@ var camMan = new CamMan();
 
 camMan.on('start', function() {
 
-    camMan.getCanvas('first-container-id', function (canvas) {
-		var context = canvas.getContext('2d');
-		var imgData = context.getImageData(0, 0, canvas.width, canvas.height);
-		
-		/** Do something w/ your image data from the first canvas */
+    camMan.getCanvas({
+        container: 'first-container-id', 
+        onFrame: function (canvas) {
+		     var context = canvas.getContext('2d');
+		     var imgData = context.getImageData(0, 0, canvas.width, canvas.height);
 
-		context.putImageData(imgData, 0, 0);
+		     /** Do something w/ your image data from the first canvas */
+
+		     context.putImageData(imgData, 0, 0);
+        }
     });
 
-    camMan.getCanvas('second-container-id', function (canvas) {
-		var context = canvas.getContext('2d');
-		var imgData = context.getImageData(0, 0, canvas.width, canvas.height);
-		
-		/** Do something different w/ image data from second canvas */
+    camMan.getCanvas({
+        container: 'second-container-id', 
+        onFrame: function (canvas) {
+		     var context = canvas.getContext('2d');
+		     var imgData = context.getImageData(0, 0, canvas.width, canvas.height);
 
-		context.putImageData(imgData, 0, 0);
+		     /** Do something different w/ image data for second canvas */
+
+		     context.putImageData(imgData, 0, 0);
+        }
     });
 });
 

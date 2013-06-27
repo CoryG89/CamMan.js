@@ -2,35 +2,63 @@
 <html>
   <head>
     <title>Webcam Booth</title>
-    <script type="text/javascript" src="../CamMan.min.js"></script>
+    <script type="text/javascript" src="../CamMan.js"></script>
   </head>
   <body style="text-align:center;">
 
     <h2>Webcam Booth</h2>
     
+    <div id="videocanvas-container"><h4>HTML5 Video / Canvas Elements</h4></div>
     <div id="color-container"><h4>Color Filters</h4></div>
     <div id="grayscale-container"><h4>Grayscale Filter</h4></div>
     <div id="sepia-container"><h4>Sepia Filter</h4></div>
     <div id="inverse-container"><h4>Inverse Filter</h4></div>
 
     <script type="text/javascript">
-      var camMan = new CamMan();
+      var camMan = new CamMan({ container: 'videocanvas-container' });
 
       camMan.on('start', function () {
 
-        camMan.getCanvas('color-container', filter(yellowScale));
-        camMan.getCanvas('color-container', filter(redScale));
-        camMan.getCanvas('color-container', filter(greenScale));
-        camMan.getCanvas('color-container', filter(blueScale));
+        camMan.getCanvas({ container: 'videocanvas-container' });
 
-        camMan.getCanvas('grayscale-container');
-        camMan.getCanvas('grayscale-container', filter(grayScale));
+        camMan.getCanvas({
+          container: 'color-container', 
+          onFrame: filter(yellowScale)
+        });
+
+        camMan.getCanvas({
+          container: 'color-container',
+          onFrame: filter(redScale)
+        });
+
+        camMan.getCanvas({
+          container: 'color-container',
+          onFrame: filter(greenScale)
+        });
+
+        camMan.getCanvas({
+          container: 'color-container',
+          onFrame: filter(blueScale)
+        });
+
+        camMan.getCanvas({ container: 'grayscale-container' });
+
+        camMan.getCanvas({
+          container: 'grayscale-container',
+          onFrame: filter(grayScale)
+        });
         
-        camMan.getCanvas('sepia-container');
-        camMan.getCanvas('sepia-container', filter(sepia));
+        camMan.getCanvas({ container: 'sepia-container' });
+        camMan.getCanvas({
+          container: 'sepia-container',
+          onFrame: filter(sepia)
+        });
 
-        camMan.getCanvas('inverse-container');
-        camMan.getCanvas('inverse-container', filter(inverse));
+        camMan.getCanvas({ container: 'inverse-container' });
+        camMan.getCanvas({
+          container: 'inverse-container',
+          onFrame: filter(inverse)
+        });
 
       });
 
