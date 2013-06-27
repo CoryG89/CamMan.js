@@ -27,56 +27,58 @@ var CamMan = (function () {
     var CamMan = function CamMan(options) {
         this.events = {};
         this.snapshots = [];
-        this.canvasStorage = [];
+        this.canvasStore = [];
         this.video = null;
         this.stream = null;
         this.options = {
             audio: false,
-            container: null
+            container: null,
+            resizeWidth: null,
+            perFrameEvtPrefix: 'canvas'
         };
         this.setOptions(options);
         return this;
     };
 
     /** Create a canvas element for video output */
-    CamMan.prototype.createCanvas = function createCanvas(callback) {
+    CamMan.prototype.createCanvas = function createCanvas(resizeWidth) {
         var canvas = null;
-        var width = this.video.videoWidth;
-        var height = this.video.videoHeight;
+        var width = resizeWidth || this.video.videoWidth;
+        var height = this.video.videoHeight / (this.video.videoWidth / width);
 
         if (width && height) {
             canvas = document.createElement('canvas');
             canvas.width = width;
             canvas.height = height;
 
-            var canvasData = {
-                canvas: canvas,
-                context: canvas.getContext('2d'),
-                onFrame: callback
-            };
-
-            if (this.canvasStorage.length === 0) this.updateCanvas();
-            this.canvasStorage.push(canvasData);
-            return canvas;
+            if (this.canvasStore.length === 0) this.updateCanvas();
+            this.canvasStore.push(canvas);
         }
         return canvas;
     };
 
     /** Inject a canvas element with video output into a container element */
-    CamMan.prototype.getCanvas = function getCanvas(container, callback) {
-        var element = document.querySelector('#' + container);
-        return element.appendChild(this.createCanvas(callback));
+    CamMan.prototype.getCanvas = function getCanvas(options) {
+        var element = document.querySelector('#' + options.container);
+
+        if (element) {
+            if (options.onFrame) {
+                var evtPrefix = this.options.perFrameEvtPrefix;
+                var eventName = evtPrefix + this.canvasStore.length;
+                this.on(eventName, options.onFrame.bind(this));
+            }
+            return element.appendChild(this.createCanvas(options.resizeWidth));
+        }
     };
 
     /** Animation loop for the canvas video output */
     CamMan.prototype.updateCanvas = function updateCanvas() {
-        for (var i = 0; i < this.canvasStorage.length; i++) {
-            var canvasData = this.canvasStorage[i];
-            var canvas = canvasData.canvas;
-            var context = canvasData.context;
-            var callback = canvasData.onFrame;
+        for (var i = 0; i < this.canvasStore.length; i++) {
+            var canvas = this.canvasStore[i];
+            var context = canvas.getContext('2d');
+
             context.drawImage(this.video, 0, 0, canvas.width, canvas.height);
-            if (callback) (callback.bind(this))(canvas);
+            this.trigger(this.options.perFrameEvtPrefix + i, canvas);
         }
         requestAnimationFrame(this.updateCanvas.bind(this));
     };
@@ -119,19 +121,18 @@ var CamMan = (function () {
     };
 
     /** Create video element used to receive video from webcam via WebRTC */
-    CamMan.prototype.createVideo = function createVideo() {
-        var width = 320;
-        var height = 0;
+    CamMan.prototype.createVideo = function createVideo(resizeWidth) {
         var streaming = false;
-
         var video = document.createElement('video');
 
         video.addEventListener('canplay', function () {
             if (!streaming) {
-                height = video.videoHeight / (video.videoWidth / width);
-                video.style.width = width;
-                video.style.height = height;
+                var width = resizeWidth || video.videoWidth;
+                var height = video.videoHeight / (video.videoWidth / width);
+                video.width = video.style.width = width;
+                video.height = video.style.height = height;
                 streaming = true;
+                video.play();
                 return this.trigger('start');
             }
         }.bind(this), false);
@@ -140,8 +141,6 @@ var CamMan = (function () {
             video.mozSrcObject = this.stream;
         else
             video.src = this.getStreamURL();
-
-        video.play();
 
         return video;
     };
@@ -174,7 +173,7 @@ var CamMan = (function () {
 
         var success = function success(stream) {
             this.stream = stream;
-            this.video = this.createVideo();
+            this.video = this.createVideo(this.options.resizeWidth);
             var container = this.options.container;
             if (typeof container === 'string') {
                 var element = document.querySelector('#' + container);
@@ -198,7 +197,7 @@ var CamMan = (function () {
         if (window.URL && window.URL.revokeObjectURL) {
             window.URL.revokeObjectURL(this.video.src);
         }
-        this.canvasStorage.length = 0;
+        this.canvasStore.length = 0;
         return this.trigger('stop');
     };
 
