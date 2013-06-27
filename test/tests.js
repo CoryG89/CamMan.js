@@ -2,7 +2,9 @@ test("Synchrnous Test -- Options correctly set", function () {
     var options = {
         container: 'container',
         snapshots: true,
-        audio: false
+        audio: false,
+        perFrameEvtPrefix: "canvasOnFrame",
+        resizeWidth: 320
     };
 
     var camMan = new CamMan(options);
